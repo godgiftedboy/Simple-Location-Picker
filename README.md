@@ -1,16 +1,7 @@
 # simple_location_picker
 
-A new Flutter project.
+- Used flutter_osm_plugin for map.
+- Open Rest API provided by OSM for geocoding and location search.
+- TypeAhead field (provided by flutter_typeahead) used for displaying the search suggestions.
+- dio as http client with api calls logging using pretty_dio_logger for ease in debugging.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
