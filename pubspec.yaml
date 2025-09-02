@@ -39,6 +39,7 @@ dependencies:
   dio: ^5.9.0
   pretty_dio_logger: ^1.4.0
   flutter_typeahead: ^5.2.0
+  biometric_storage: ^5.0.1
 
 dev_dependencies:
   flutter_test:

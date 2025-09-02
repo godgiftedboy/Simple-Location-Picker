@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:simple_location_picker/location_page_here.dart';
+import 'package:simple_location_picker/biometric/biometric_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Important!
   runApp(const MyApp());
 }
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LocationSelectPage(),
+      home: const BiometricPage(),
     );
   }
 }
