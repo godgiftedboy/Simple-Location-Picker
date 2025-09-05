@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_location_picker/location_page_here.dart';
+import 'package:simple_location_picker/multistep-form/multistep_form.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LocationSelectPage(),
+      home: const MultiStepForm(),
     );
   }
 }

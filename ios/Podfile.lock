@@ -1,6 +1,10 @@
 PODS:
   - Alamofire (5.10.2)
+  - biometric_storage (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_keyboard_visibility (0.0.1):
+    - Flutter
   - flutter_osm_plugin (0.0.1):
     - Alamofire
     - Flutter
@@ -10,15 +14,20 @@ PODS:
   - OSMFlutterFramework (0.8.4)
   - permission_handler_apple (9.3.0):
     - Flutter
+  - pointer_interceptor_ios (0.0.1):
+    - Flutter
   - Polyline (5.1.0)
   - url_launcher_ios (0.0.1):
     - Flutter
   - Yams (5.0.6)
 
 DEPENDENCIES:
+  - biometric_storage (from `.symlinks/plugins/biometric_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_osm_plugin (from `.symlinks/plugins/flutter_osm_plugin/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - pointer_interceptor_ios (from `.symlinks/plugins/pointer_interceptor_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
@@ -29,21 +38,30 @@ SPEC REPOS:
     - Yams
 
 EXTERNAL SOURCES:
+  biometric_storage:
+    :path: ".symlinks/plugins/biometric_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_osm_plugin:
     :path: ".symlinks/plugins/flutter_osm_plugin/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  pointer_interceptor_ios:
+    :path: ".symlinks/plugins/pointer_interceptor_ios/ios"
   url_launcher_ios:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  biometric_storage: 662167ef947fba48891850f0b3042f892a839e9a
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_keyboard_visibility: 4625131e43015dbbe759d9b20daaf77e0e3f6619
   flutter_osm_plugin: 3fb57665b32a81fcffa57c6206658d3a0d0d1a96
   OSMFlutterFramework: 2f1260ac2854d3398b92403f2d5e012b4ca2c620
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  pointer_interceptor_ios: ec847ef8b0915778bed2b2cef636f4d177fa8eed
   Polyline: 2a1f29f87f8d9b7de868940f4f76deb8c678a5b1
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
   Yams: e10dae147f517ed57ecae37c5e8681bdf8fcab65
