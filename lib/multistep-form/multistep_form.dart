@@ -12,6 +12,7 @@ class MultiStepForm extends StatefulWidget {
 class _MultiStepFormState extends State<MultiStepForm> {
   int currentStep = 0;
   final ScrollController _scrollController = ScrollController();
+  double stepWidth = 65;
 
   List<StepItemEntity> steps = [
     StepItemEntity(label: "General", isCompleted: false),
@@ -32,10 +33,11 @@ class _MultiStepFormState extends State<MultiStepForm> {
     super.dispose();
   }
 
-  void _scrollToStep(int index) {
-    const stepWidth = 70.0;
-
-    if (index <= 2) return;
+  void _scrollToStep(int index, {bool isForward = false}) {
+    ///To maintain the currently selected index/step to center
+    if (isForward) {
+      if (index <= 2) return;
+    }
 
     // Calculate absolute target offset
     final targetOffset = (index - 2) * stepWidth;
@@ -51,6 +53,33 @@ class _MultiStepFormState extends State<MultiStepForm> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
+  }
+
+  ///Logic to Goto to next step
+  void gotoNextStep() {
+    if (currentStep < steps.length - 1) {
+      setState(() {
+        currentStep++;
+      });
+      _scrollToStep(currentStep, isForward: true);
+    }
+  }
+
+  ///Logic to Goto to next step
+  void gotoPrevStep() {
+    if (currentStep > 0) {
+      setState(() {
+        currentStep--;
+      });
+      _scrollToStep(currentStep);
+    }
+  }
+
+  void markComplete(int index) {
+    ///Logic to complete the step (State comparision required for checking completion)
+    setState(() {
+      steps[index] = steps[index].copyWith(isCompleted: true);
+    });
   }
 
   @override
@@ -77,7 +106,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
                         _scrollToStep(index);
                       },
                       child: SizedBox(
-                        width: 70, // 👈 match stepWidth above
+                        width: stepWidth,
                         child: StepItem(
                           label: e.label,
                           isCompleted: e.isCompleted,
@@ -93,22 +122,18 @@ class _MultiStepFormState extends State<MultiStepForm> {
                 child: Text("Step $currentStep"),
               ),
               ElevatedButton(
-                onPressed: () {
-                  if (currentStep < steps.length - 1) {
-                    setState(() {
-                      currentStep++;
-                    });
-                    _scrollToStep(currentStep);
-                  }
-                },
+                onPressed: gotoNextStep,
                 child: const Text("Next Step"),
               ),
               ElevatedButton(
+                onPressed: gotoPrevStep,
+                child: const Text("Prev Step"),
+              ),
+
+              ///Mark current step as completed - Demo implementation for markComplete function.
+              ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    steps[currentStep] =
-                        steps[currentStep].copyWith(isCompleted: true);
-                  });
+                  markComplete(currentStep);
                 },
                 child: const Text("Complete Current Step"),
               ),
