@@ -1,36 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_map/flutter_map.dart' as flmap;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:latlong2/latlong.dart' as ll;
 import 'package:simple_location_picker/geocoding_osm_api.dart';
 
 class LocationPickerScreen extends StatefulWidget {
-  const LocationPickerScreen({super.key});
+  final ll.LatLng? selectedPoint;
+  const LocationPickerScreen({
+    super.key,
+    this.selectedPoint,
+  });
 
   @override
   State<LocationPickerScreen> createState() => _LocationPickerScreenState();
 }
 
 class _LocationPickerScreenState extends State<LocationPickerScreen> {
-  late MapController controller;
-  GeoPoint? selectedPoint = GeoPoint(latitude: 27.7172, longitude: 85.3240);
+  // flutter_map controller
+  late flmap.MapController controller;
+  late ll.LatLng? selectedPoint;
+
+  // ✅ replaced GeoPoint with ll.LatLng
+
   TextEditingController searchController = TextEditingController();
+  double _currentZoom = 12.0;
+
   @override
   void initState() {
     super.initState();
-    controller = MapController(
-      initPosition: selectedPoint!,
-    );
+    selectedPoint = widget.selectedPoint ?? const ll.LatLng(27.7172, 85.3240);
+
+    controller = flmap.MapController();
   }
 
-  void _setSearchSelectedPoint(GeoPoint point) async {
-    await controller.moveTo(point);
+  void _setSearchSelectedPoint(ll.LatLng point) async {
+    controller.move(point, _currentZoom);
     setState(() {
       selectedPoint = point;
     });
   }
 
-  void _updateSelectedPoint(Region region) {
-    final center = region.center;
+  void _updateSelectedPoint(ll.LatLng center) {
     setState(() {
       selectedPoint = center;
     });
@@ -38,6 +48,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final initialCenter = selectedPoint ?? const ll.LatLng(27.7172, 85.3240);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Pick Location"),
@@ -58,15 +70,13 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
       ),
       body: Column(
         children: [
-          //Use TypeAheadField here
-
           TypeAheadField<dynamic>(
             hideOnEmpty: true,
             debounceDuration: const Duration(milliseconds: 700),
-            builder: (context, controller, focusNode) {
+            builder: (context, controllerTF, focusNode) {
               return TextFormField(
                 focusNode: focusNode,
-                controller: controller, // ✅ use the one provided here
+                controller: controllerTF,
                 decoration: const InputDecoration(
                   isDense: true,
                   contentPadding:
@@ -76,16 +86,16 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   hintText: "",
                 ),
                 onEditingComplete: () {
-                  // ✅ trigger suggestions when editing completes
                   FocusScope.of(context).unfocus();
                 },
               );
             },
             onSelected: (suggestion) {
-              final point = GeoPoint(
-                  latitude: double.parse(suggestion['lat']),
-                  longitude: double.parse(suggestion['lon']));
-              _setSearchSelectedPoint(point); // your function to update map
+              final point = ll.LatLng(
+                double.parse(suggestion['lat']),
+                double.parse(suggestion['lon']),
+              );
+              _setSearchSelectedPoint(point);
               searchController.text = "";
             },
             itemBuilder: (context, suggestion) {
@@ -120,33 +130,40 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                OSMFlutter(
-                  controller: controller,
-                  osmOption: OSMOption(
-                    zoomOption: const ZoomOption(initZoom: 12),
-                    userLocationMarker: UserLocationMaker(
-                      personMarker: const MarkerIcon(
-                        icon: Icon(Icons.person_pin_circle,
-                            color: Colors.blue, size: 64),
-                      ),
-                      directionArrowMarker: const MarkerIcon(
-                        icon: Icon(Icons.double_arrow, size: 48),
-                      ),
-                    ),
-                    roadConfiguration: const RoadOption(
-                      roadColor: Colors.blue,
-                    ),
+                flmap.FlutterMap(
+                  mapController: controller,
+                  options: flmap.MapOptions(
+                    initialCenter: initialCenter,
+                    initialZoom: _currentZoom,
+                    onPositionChanged: (position, hasGesture) {
+                      setState(() {
+                        _currentZoom = position.zoom;
+                      });
+                      _updateSelectedPoint(position.center);
+                    },
                   ),
-                  onMapMoved: (region) => _updateSelectedPoint(region),
-                ),
-
-                // Fixed marker at the center
-                const IgnorePointer(
-                  child: Icon(
-                    Icons.location_on,
-                    size: 50,
-                    color: Colors.red,
-                  ),
+                  children: [
+                    flmap.TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName:
+                          'com.example.simple_location_picker',
+                    ),
+                    flmap.MarkerLayer(markers: [
+                      flmap.Marker(
+                        point: selectedPoint ?? initialCenter,
+                        width: 50,
+                        height: 50,
+                        child: const IgnorePointer(
+                          child: Icon(
+                            Icons.location_on,
+                            size: 50,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ],
                 ),
               ],
             ),

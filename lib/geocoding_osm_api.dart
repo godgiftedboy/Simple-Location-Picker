@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart'; // for kDebugMode
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 /// Create Dio instance with PrettyDioLogger
@@ -44,7 +44,7 @@ Future<List<Map<String, dynamic>>> fetchSuggestions(String query) async {
 }
 
 /// Get address from coordinates using Nominatim (reverse API)
-Future<String> getAddressFromOSM(GeoPoint point) async {
+Future<String> getAddressFromOSM(LatLng point) async {
   final url =
       'https://nominatim.openstreetmap.org/reverse?format=json&lat=${point.latitude}&lon=${point.longitude}&zoom=18&addressdetails=1';
 

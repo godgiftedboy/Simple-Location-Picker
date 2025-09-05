@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:simple_location_picker/custom_location_picker.dart';
 import 'package:simple_location_picker/geocoding_osm_api.dart';
 
@@ -11,13 +11,17 @@ class LocationSelectPage extends StatefulWidget {
 }
 
 class _LocationSelectPageState extends State<LocationSelectPage> {
-  GeoPoint? selectedPoint;
+  LatLng? selectedPoint;
   String? selectedAddress;
 
   Future<void> _pickLocation() async {
-    final GeoPoint? point = await Navigator.push(
+    final LatLng? point = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const LocationPickerScreen()),
+      MaterialPageRoute(
+        builder: (_) => LocationPickerScreen(
+          selectedPoint: selectedPoint,
+        ),
+      ),
     );
 
     if (point != null) {
