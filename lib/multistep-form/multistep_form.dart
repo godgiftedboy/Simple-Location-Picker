@@ -35,8 +35,10 @@ class _MultiStepFormState extends State<MultiStepForm> {
   void _scrollToStep(int index) {
     const stepWidth = 70.0;
 
+    if (index <= 2) return;
+
     // Calculate absolute target offset
-    final targetOffset = index * stepWidth;
+    final targetOffset = (index - 2) * stepWidth;
 
     // Clamp to scroll range
     final clampedOffset = targetOffset.clamp(
